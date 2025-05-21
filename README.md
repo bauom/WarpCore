@@ -1,4 +1,4 @@
-# WarpCore – Workflow-oriented AI Runtime & Pipeline Connector Orchestrated in a Rust Engine
+# WarpCore – Wildcard AI Runtime & Pipeline Connector Orchestrated in a Rust Engine
 
 A modular Rust workspace for running inference with **local LLM engines** (e.g. `llama.cpp`), **local image generation models** (e.g., via `diffusion-rs`), and **cloud AI APIs** (e.g. OpenAI, Anthropic).
 
