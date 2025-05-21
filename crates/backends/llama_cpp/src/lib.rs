@@ -1,12 +1,12 @@
 use async_trait::async_trait;
 use async_stream::try_stream;
 use futures::Stream;
-use inference_lib_core::config::{
+use warpcore_core::config::{
     BackendConfig, BackendType, GenerationOptions, LocalBackendConfig,
     ModelConfig, ModelType,
 };
-use inference_lib_core::error::{InferenceError, Result};
-use inference_lib_core::traits::{InferenceService, Model, TextToTextModel};
+use warpcore_core::error::{InferenceError, Result};
+use warpcore_core::traits::{InferenceService, Model, TextToTextModel};
 use llama_cpp_2::{
     context::{params::LlamaContextParams},
     llama_backend::{LlamaBackend, NumaStrategy},

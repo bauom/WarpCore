@@ -1,5 +1,5 @@
 [package]
-name = "inference-lib-diffusion-rs"
+name = "warpcore-diffusion-rs"
 version = "0.1.0"
 edition = "2021"
 
@@ -14,7 +14,7 @@ diffusion-rs = { version = "0.1.9" , default-features = false }
 # For local development, you can use a path dependency instead:
 # diffusion-rs = { path = "/path/to/your/local/diffusion-rs/crates/diffusion-rs", default-features = false, features = ["preset", "api"] }
 
-inference-lib-core = { path = "../../core" }
+warpcore-core = { path = "../../core" }
 
 serde = { version = "1.0", features = ["derive"] } # For Preset mapping if needed
 strum = { version = "0.26", features = ["derive"] }

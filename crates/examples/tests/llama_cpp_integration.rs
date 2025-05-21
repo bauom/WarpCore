@@ -2,7 +2,7 @@
 mod llama_cpp_tests {
     use anyhow::Result;
     use futures::StreamExt;
-    use inference_lib::{
+    use warpcore::{
         create_inference_service, BackendType, GenerationOptions, LocalBackendConfig, ModelType, LlamaCppSpecificConfig,
     };
     use std::env;
@@ -63,7 +63,7 @@ mod llama_cpp_tests {
 
         let service = create_inference_service(
             BackendType::LlamaCpp,
-            Some(inference_lib::BackendConfig::Local(backend_config)),
+            Some(warpcore::BackendConfig::Local(backend_config)),
         )
         .await?;
 

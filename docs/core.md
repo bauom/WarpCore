@@ -1,6 +1,6 @@
 # Core Abstractions
 
-The `inference-lib-core` crate defines the fundamental building blocks for the library. It provides the traits, configuration structs, and error types used by all backend implementations.
+The `warpcore-core` crate defines the fundamental building blocks for the library. It provides the traits, configuration structs, and error types used by all backend implementations.
 
 ## Key Components
 

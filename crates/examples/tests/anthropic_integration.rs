@@ -2,7 +2,7 @@
 mod anthropic_tests {
     use anyhow::Result;
     use futures::StreamExt;
-    use inference_lib::{create_inference_service, BackendType, GenerationOptions, ModelType};
+    use warpcore::{create_inference_service, BackendType, GenerationOptions, ModelType};
     use std::env;
 
     // Helper function to setup tracing and dotenv only once

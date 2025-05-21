@@ -1,18 +1,18 @@
 // This file will re-export items based on enabled features
 
-pub use inference_lib_core::*;
+pub use warpcore_core::*;
 
 #[cfg(feature = "openai")]
-pub use inference_lib_openai;
+pub use warpcore_openai;
 
 #[cfg(feature = "llama_cpp")]
-pub use inference_lib_llama_cpp;
+pub use warpcore_llama_cpp;
 
 #[cfg(feature = "anthropic")]
-pub use inference_lib_anthropic;
+pub use warpcore_anthropic;
 
 #[cfg(feature = "diffusion-rs")]
-pub use inference_lib_diffusion_rs;
+pub use warpcore_diffusion_rs;
 
 // --- Top-level helper functions ---
 
@@ -27,23 +27,23 @@ pub async fn create_inference_service(
     match backend_type {
         #[cfg(feature = "openai")]
         BackendType::OpenAI => {
-            let service = inference_lib_openai::OpenAIService::new(config)?;
+            let service = warpcore_openai::OpenAIService::new(config)?;
             Ok(Arc::new(service))
         }
         #[cfg(feature = "llama_cpp")]
         BackendType::LlamaCpp => {
-            use inference_lib_llama_cpp::LlamaCppService;
+            use warpcore_llama_cpp::LlamaCppService;
             let service = LlamaCppService::new(config)?;
             Ok(Arc::new(service))
         }
         #[cfg(feature = "anthropic")]
         BackendType::Anthropic => {
-            let service = inference_lib_anthropic::AnthropicService::new(config)?;
+            let service = warpcore_anthropic::AnthropicService::new(config)?;
             Ok(Arc::new(service))
         }
         #[cfg(feature = "diffusion-rs")]
         BackendType::DiffusionRs => {
-            let service = inference_lib_diffusion_rs::DiffusionRsService::new(config)?;
+            let service = warpcore_diffusion_rs::DiffusionRsService::new(config)?;
             Ok(Arc::new(service))
         }
         _ => Err(InferenceError::BackendUnavailable(backend_type)),

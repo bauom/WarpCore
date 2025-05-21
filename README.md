@@ -126,10 +126,10 @@ You can run them using:
 #       export ANTHROPIC_API_KEY=sk-...
 
 # Run OpenAI tests
-cargo test --package inference-lib-examples --features openai -- --ignored
+cargo test --package warpcore-examples --features openai -- --ignored
 
 # Run Anthropic tests
-cargo test --package inference-lib-examples --features anthropic -- --ignored
+cargo test --package warpcore-examples --features anthropic -- --ignored
 
 # Run Llama.cpp tests
 # Requires the MODELS_PATH environment variable pointing to a directory containing models.
@@ -137,20 +137,20 @@ cargo test --package inference-lib-examples --features anthropic -- --ignored
 # to exist at '$MODELS_PATH/hf/bartowski/Qwen2-0.5B-Instruct-GGUF/Qwen2-0.5B-Instruct-Q8_0.gguf'.
 # export MODELS_PATH=/path/to/your/models/directory
 # NOTE: Due to potential concurrency issues in the underlying library, run with --test-threads=1
-cargo test --package inference-lib-examples --features llama_cpp -- --ignored --test-threads=1
+cargo test --package warpcore-examples --features llama_cpp -- --ignored --test-threads=1
 
 # Run Diffusion-rs tests
 # The preset test (SDXLTurbo1_0Fp16) runs by default and downloads model weights.
 # The local model test is ignored by default; requires DIFFUSION_MODELS_PATH (or MODELS_PATH)
 # and a model file (e.g., *.safetensors, *.gguf) at that location.
 # export DIFFUSION_MODELS_PATH=/path/to/your/diffusion/models
-cargo test --package inference-lib-examples --features diffusion-rs --test diffusion_rs_integration
+cargo test --package warpcore-examples --features diffusion-rs --test diffusion_rs_integration
 
 # Run all available ignored tests (requires all relevant API keys and model paths)
 # Note: Llama.cpp tests require MODELS_PATH and the specific test model.
 # It's recommended to run 'all' tests sequentially if including llama_cpp:
-# cargo test --package inference-lib-examples --features all -- --ignored --test-threads=1
-cargo test --package inference-lib-examples --features all -- --ignored
+# cargo test --package warpcore-examples --features all -- --ignored --test-threads=1
+cargo test --package warpcore-examples --features all -- --ignored
 ```
 
 ---
@@ -171,7 +171,7 @@ cargo test --package inference-lib-examples --features all -- --ignored
 Backend configuration can be provided explicitly or loaded automatically from environment variables.
 
 ```rust
-use inference_lib::{create_inference_service, BackendType, BackendConfig, ApiConfig};
+use warpcore::{create_inference_service, BackendType, BackendConfig, ApiConfig};
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {

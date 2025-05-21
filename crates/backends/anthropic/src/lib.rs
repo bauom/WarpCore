@@ -3,9 +3,9 @@ use anthropic::types::{ContentBlock, Message, MessagesRequest, Role, MessagesStr
 use reqwest::header::{HeaderMap, HeaderValue, ACCEPT, CONTENT_TYPE};
 use serde::Deserialize;
 
-use inference_lib_core::config::{ApiConfig, BackendConfig, BackendType, GenerationOptions, ModelConfig, ModelType};
-use inference_lib_core::error::{InferenceError, Result};
-use inference_lib_core::traits::{InferenceService, Model, TextToTextModel};
+use warpcore_core::config::{ApiConfig, BackendConfig, BackendType, GenerationOptions, ModelConfig, ModelType};
+use warpcore_core::error::{InferenceError, Result};
+use warpcore_core::traits::{InferenceService, Model, TextToTextModel};
 
 use async_trait::async_trait;
 use futures::StreamExt;

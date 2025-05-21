@@ -1,7 +1,7 @@
 #[cfg(feature = "diffusion-rs")]
 mod diffusion_rs_tests {
     use anyhow::Result;
-    use inference_lib::{
+    use warpcore::{
         create_inference_service, BackendType, DiffusionOptions, ImageOutput, ModelType, SamplerKind,
     };
     use std::env; // For env::var for model path, and temp_dir

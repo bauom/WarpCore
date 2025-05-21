@@ -1,14 +1,14 @@
 # Usage Examples
 
-This document shows common ways to use the `inference-lib` library.
+This document shows common ways to use the `warpcore` library.
 
 ## Prerequisites
 
-1.  **Add Dependency:** Add `inference-lib` to your `Cargo.toml` and enable the features for the backends you want to use:
+1.  **Add Dependency:** Add `warpcore` to your `Cargo.toml` and enable the features for the backends you want to use:
 
     ```toml
     [dependencies]
-    inference-lib = { version = "0.1.0", features = ["openai"] } # Example: Enable OpenAI
+    warpcore = { version = "0.1.0", features = ["openai"] } # Example: Enable OpenAI
     anyhow = "1.0" # For error handling in examples
     tokio = { version = "1", features = ["full"] } # For async runtime
     futures = "0.3" # For stream handling
@@ -30,7 +30,7 @@ The typical workflow involves:
 This example demonstrates using the OpenAI backend for both simple and streaming text generation.
 
 ```rust
-use inference_lib::{
+use warpcore::{
     create_inference_service, BackendType, GenerationOptions, ModelType,
     InferenceService, // Bring the trait into scope
     TextToTextModel, // Bring the trait into scope
@@ -127,7 +127,7 @@ The library also provides top-level helper functions in `src/lib.rs` for simpler
 -   **`generate_text(backend_type, model_id_or_path, prompt, max_tokens)`**: A quick helper for simple text generation. It handles service creation, model loading, generation, and unloading internally.
 
 ```rust
-use inference_lib::{generate_text, BackendType};
+use warpcore::{generate_text, BackendType};
 use anyhow::Result;
 
 #[tokio::main]

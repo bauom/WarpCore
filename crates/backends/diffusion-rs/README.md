@@ -1,6 +1,6 @@
-# `inference-lib` – Diffusion-rs Backend
+# `warpcore` – Diffusion-rs Backend
 
-This crate (`inference-lib-diffusion-rs`) wires the [`diffusion-rs`](https://crates.io/crates/diffusion-rs) project into the **`inference-lib`** umbrella so that you can generate images from text with the same high-level API that powers the other back-ends (OpenAI, Llama-CPP, …).
+This crate (`warpcore-diffusion-rs`) wires the [`diffusion-rs`](https://crates.io/crates/diffusion-rs) project into the **`warpcore`** umbrella so that you can generate images from text with the same high-level API that powers the other back-ends (OpenAI, Llama-CPP, …).
 
 ---
 
@@ -22,7 +22,7 @@ This crate (`inference-lib-diffusion-rs`) wires the [`diffusion-rs`](https://cra
 # Workspace-wide build
 cargo test --all-features                   # enable everything
 # or a selective build
-cargo test -p inference-lib-examples --features diffusion-rs
+cargo test -p warpcore-examples --features diffusion-rs
 ```
 
 ---
@@ -30,7 +30,7 @@ cargo test -p inference-lib-examples --features diffusion-rs
 ## 2  Using the back-end in code
 
 ```rust
-use inference_lib::{
+use warpcore::{
     BackendType, create_inference_service, ModelType,
     DiffusionOptions, SamplerKind, ImageOutput
 };
@@ -95,5 +95,5 @@ Two scenarios are asserted:
 - [ ] Add support for additional image formats (JPEG/WEBP) and byte-buffer output directly.
 - [ ] Auto-scan `$DIFFUSION_MODELS_PATH` for available local models and return them from `list_available_models`.
 - [ ] Respect user-supplied `BackendConfig` (device selection, thread-count, etc.).
-- [ ] Add upscaler / img2img / ControlNet hooks once `inference-lib` grows corresponding traits.
+- [ ] Add upscaler / img2img / ControlNet hooks once `warpcore` grows corresponding traits.
 - [ ] Write end-to-end example binary in `crates/examples/src/bin/diffusion_cli.rs`. 

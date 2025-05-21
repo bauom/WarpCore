@@ -1,22 +1,22 @@
 # Backend Integrations
 
-This library supports multiple inference backends through separate crates located in `crates/backends/`. Each backend implements the `InferenceService` trait from `inference-lib-core`.
+This library supports multiple inference backends through separate crates located in `crates/backends/`. Each backend implements the `InferenceService` trait from `warpcore-core`.
 
-To use a specific backend, you need to enable its corresponding feature flag when depending on `inference-lib`.
+To use a specific backend, you need to enable its corresponding feature flag when depending on `warpcore`.
 
 ```toml
 # Example in your Cargo.toml
 [dependencies]
-inference-lib = { version = "0.1.0", features = ["openai", "anthropic"] } # Enable OpenAI and Anthropic
+warpcore = { version = "0.1.0", features = ["openai", "anthropic"] } # Enable OpenAI and Anthropic
 ```
 
-The main `inference-lib` crate re-exports the necessary types and functions when a feature is enabled.
+The main `warpcore` crate re-exports the necessary types and functions when a feature is enabled.
 
 ## Available Backends
 
 ### 1. OpenAI (`features = ["openai"]`)
 
--   **Crate:** `crates/backends/openai` (`inference-lib-openai`)
+-   **Crate:** `crates/backends/openai` (`warpcore-openai`)
 -   **Service:** `OpenAIService`
 -   **Type:** `BackendType::OpenAI`
 -   **Config:** `BackendConfig::Api(ApiConfig)`
@@ -32,7 +32,7 @@ The main `inference-lib` crate re-exports the necessary types and functions when
 
 ### 2. Anthropic (`features = ["anthropic"]`)
 
--   **Crate:** `crates/backends/anthropic` (`inference-lib-anthropic`)
+-   **Crate:** `crates/backends/anthropic` (`warpcore-anthropic`)
 -   **Service:** `AnthropicService`
 -   **Type:** `BackendType::Anthropic`
 -   **Config:** `BackendConfig::Api(ApiConfig)`
@@ -47,7 +47,7 @@ The main `inference-lib` crate re-exports the necessary types and functions when
 
 ### 3. Llama.cpp (`features = ["llama_cpp"]`)
 
--   **Crate:** `crates/backends/llama_cpp` (`inference-lib-llama_cpp`)
+-   **Crate:** `crates/backends/llama_cpp` (`warpcore-llama_cpp`)
 -   **Service:** `LlamaCppService`
 -   **Type:** `BackendType::LlamaCpp`
 -   **Config:** `BackendConfig::Local(LocalBackendConfig)`

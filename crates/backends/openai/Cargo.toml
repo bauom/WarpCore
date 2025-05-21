@@ -1,10 +1,10 @@
 [package]
-name = "inference-lib-openai"
+name = "warpcore-openai"
 version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-inference-lib-core = { path = "../../core", features = ["openai_error_conversion"] }
+warpcore-core = { path = "../../core", features = ["openai_error_conversion"] }
 
 # Add OpenAI client crate here
 # Inherit version/source from workspace, but specify required features here

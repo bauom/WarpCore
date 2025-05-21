@@ -1,11 +1,11 @@
 #[cfg(feature = "openai")]
 mod openai_tests {
     // Remove unused imports
-    // use inference_lib::*;
+    // use warpcore::*;
     // use tokio_stream::StreamExt;
     use anyhow::Result;
     use futures::StreamExt; // Keep this one if actually used by stream processing below
-    use inference_lib::{create_inference_service, BackendType, GenerationOptions, ModelType};
+    use warpcore::{create_inference_service, BackendType, GenerationOptions, ModelType};
     use std::env;
 
     // Helper function to setup tracing and dotenv only once

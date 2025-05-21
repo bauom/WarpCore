@@ -1,10 +1,10 @@
 [package]
-name = "inference-lib-llama-cpp"
+name = "warpcore-llama-cpp"
 version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-inference-lib-core = { path = "../../core", version = "0.1.0" }
+warpcore-core = { path = "../../core", version = "0.1.0" }
 llama-cpp-2 = { version = "0.1.92", features = ["metal"] }
 once_cell = { version = "1.19" }
 tracing = { version = "0.1" }

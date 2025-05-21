@@ -13,17 +13,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `TextToImageModel` trait in `crates/core/src/traits.rs`.
   - `DiffusionOptions`, `SamplerKind`, `ImageOutputFormat`, `ImageOutput` structs/enums in `crates/core/src/config.rs`.
   - `as_text_to_image()` method to the base `Model` trait in `crates/core/src/traits.rs`.
-- `diffusion-rs` backend (`inference-lib-diffusion-rs` crate):
+- `diffusion-rs` backend (`warpcore-diffusion-rs` crate):
   - Implements `InferenceService` and `TextToImageModel`.
   - Uses `diffusion-rs` crate (version `0.1.9`).
   - Supports loading models by preset name (dynamically mapped from all `diffusion_rs::preset::Preset` variants, including those with `WeightType`) or local file path (resolved via `$DIFFUSION_MODELS_PATH` or `$MODELS_PATH`, supports `.safetensors`, `.ckpt`, `.gguf`).
   - `generate_image` method implemented using `diffusion_rs::api::txt2img`.
-  - Handles mapping of `SamplerKind` (from `inference-lib-core`) to `diffusion_rs::api::SampleMethod`.
+  - Handles mapping of `SamplerKind` (from `warpcore-core`) to `diffusion_rs::api::SampleMethod`.
   - Includes a `README.md` for the backend detailing usage, caveats, and TODOs.
 - Integration tests for `diffusion-rs` backend (`crates/examples/tests/diffusion_rs_integration.rs`):
   - Tests preset generation (e.g., `SDXLTurbo1_0Fp16`) and local model loading.
   - Includes `setup()` function for `tracing_subscriber` and `dotenv` initialization.
-- Initial implementation of the `llama_cpp` backend (`inference-lib-llama-cpp` crate).
+- Initial implementation of the `llama_cpp` backend (`warpcore-llama-cpp` crate).
   - Uses `llama-cpp-2` crate (version `0.1.92`) as the underlying engine.
   - Implements `InferenceService` for loading models (`LlamaModel::load_from_file`).
   - Implements `TextToTextModel` for basic generation (`generate`, `generate_stream`).
@@ -37,7 +37,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - **`diffusion-rs`**: Resolved `UninitializedField("prompt")` error during preset model loading by providing a dummy prompt to `diffusion_rs::preset::PresetBuilder`.
-- **`diffusion-rs`**: Corrected test discovery for `diffusion_rs_integration.rs` by specifying the package with `cargo test -p inference-lib-examples ...`.
+- **`diffusion-rs`**: Corrected test discovery for `diffusion_rs_integration.rs` by specifying the package with `cargo test -p warpcore-examples ...`.
 - **`diffusion-rs`**: Addressed `non_exhaustive` warnings for `diffusion_rs::preset::Preset` pattern matching in internal helper functions by adding wildcard `_` arms.
 - Resolved various API compatibility issues between the initial implementation and `llama-cpp-2` v0.1.92 API, including:
   - `NumaStrategy` naming.
@@ -65,7 +65,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Commented out unused `map_from_diffusion_rs_sampler` in `diffusion-rs` backend.
 
 ### Known Issues
-- **`diffusion-rs`**: `DiffusionRsModel` in `inference-lib-diffusion-rs` uses `unsafe impl Send + Sync` due to raw pointers in `diffusion-rs` internals. This requires auditing for thread safety. (Noted in `ROADMAP.md` and backend `README.md`).
+- **`diffusion-rs`**: `DiffusionRsModel` in `warpcore-diffusion-rs` uses `unsafe impl Send + Sync` due to raw pointers in `diffusion-rs` internals. This requires auditing for thread safety. (Noted in `ROADMAP.md` and backend `README.md`).
 - Configuration for `mmap` and `mlock` via `LlamaModelParams` setters (`with_mmap`, `with_mlock`) is currently commented out due to persistent, unexplained compiler errors despite matching `llama-cpp-2` v0.1.92 documentation. See `ROADMAP.md`.
 - Sampling is currently limited to basic greedy search.
 - Running `llama_cpp` integration tests concurrently (default `cargo test` behavior) can cause hangs, likely due to internal state/concurrency issues in `llama.cpp`. Tests pass when run sequentially (`--test-threads=1`).
@@ -79,8 +79,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Unified `InferenceError` type.
 - OpenAI backend implementation (`openai` feature).
 - Anthropic backend implementation (`anthropic` feature).
-- Integration tests (`inference-lib-examples` package).
+- Integration tests (`warpcore-examples` package).
 - Basic README and project documentation.
 
 [Unreleased]: https://github.com/your-username/your-repo-name/compare/v0.1.0...HEAD
-[0.1.0]: https://github.com/your-username/your-repo-name/releases/tag/v0.1.0 
+[0.1.0]: https://github.com/your-username/your-repo-name/releases/tag/v0.1.0

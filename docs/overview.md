@@ -1,6 +1,6 @@
 # Inference Library Overview
 
-This library (`inference-lib`) provides a unified, type-safe interface in Rust for interacting with various inference backends, including both cloud-based APIs (like OpenAI, Anthropic) and local LLM engines (like Llama.cpp).
+This library (`warpcore`) provides a unified, type-safe interface in Rust for interacting with various inference backends, including both cloud-based APIs (like OpenAI, Anthropic) and local LLM engines (like Llama.cpp).
 
 ## Goal
 
@@ -10,9 +10,9 @@ The primary goal is to abstract away the differences between various AI inferenc
 
 - **Unified Interface:** A set of common traits (`InferenceService`, `Model`, `TextToTextModel`, etc.) define the core operations like loading models and generating text.
 - **Backend Crates:** Each supported backend (OpenAI, Anthropic, Llama.cpp) is implemented in its own crate within the `crates/backends/` directory. This keeps the core library lean and allows users to only compile the dependencies they need.
-- **Feature Flags:** Cargo features (`openai`, `anthropic`, `llama_cpp`) control which backend crates are compiled and included in the main `inference-lib` crate.
+- **Feature Flags:** Cargo features (`openai`, `anthropic`, `llama_cpp`) control which backend crates are compiled and included in the main `warpcore` crate.
 - **Configuration:** Typed structs (`BackendConfig`, `ApiConfig`, `GenerationOptions`) allow for configuring backend connections (API keys, base URLs) and generation parameters (max tokens, etc.). Configuration can often be loaded automatically from environment variables.
-- **Helper Functions:** Top-level functions like `create_inference_service` and `generate_text` in the main `inference-lib` crate provide convenient ways to quickly get started.
+- **Helper Functions:** Top-level functions like `create_inference_service` and `generate_text` in the main `warpcore` crate provide convenient ways to quickly get started.
 
 ## Workspace Structure
 

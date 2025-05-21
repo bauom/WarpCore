@@ -1,5 +1,5 @@
 use async_trait::async_trait;
-use inference_lib_core::{
+use warpcore_core::{
     config::{
         BackendConfig, BackendType, DiffusionOptions, ImageOutputFormat, ModelConfig as CoreModelConfig, ModelType, SamplerKind,
     },

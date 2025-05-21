@@ -1,10 +1,10 @@
 [package]
-name = "inference-lib-anthropic"
+name = "warpcore-anthropic"
 version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-inference-lib-core = { path = "../../core", features = ["anthropic_error_conversion"] } # Enable error conversion feature
+warpcore-core = { path = "../../core", features = ["anthropic_error_conversion"] } # Enable error conversion feature
 
 # Add Anthropic client crate here
 anthropic = { workspace = true, features = ["rustls"] } # Using the `anthropic` crate

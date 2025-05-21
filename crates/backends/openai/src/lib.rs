@@ -1,10 +1,10 @@
 use async_openai::config::OpenAIConfig;
 use async_openai::types::{ChatCompletionRequestMessage, ChatCompletionRequestUserMessageArgs, CreateChatCompletionRequestArgs};
 use async_openai::{Client as OpenAIClient};
-use inference_lib_core::config::GenerationOptions;
-use inference_lib_core::error::{InferenceError, Result};
-use inference_lib_core::traits::{InferenceService, Model, TextToTextModel};
-use inference_lib_core::{ApiConfig, BackendConfig, BackendType, ModelConfig, ModelType};
+use warpcore_core::config::GenerationOptions;
+use warpcore_core::error::{InferenceError, Result};
+use warpcore_core::traits::{InferenceService, Model, TextToTextModel};
+use warpcore_core::{ApiConfig, BackendConfig, BackendType, ModelConfig, ModelType};
 
 use async_trait::async_trait;
 use futures::StreamExt;

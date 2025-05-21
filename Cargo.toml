@@ -38,25 +38,25 @@ once_cell = "1.19"
 # Workspace-level features control optional dependencies in the root package
 [features]
 default = []
-llama_cpp = ["inference-lib-llama-cpp"] # Enable dependency in root pkg
-openai = ["inference-lib-openai"]    # Enable the optional backend dependency in the root package.
-anthropic = ["inference-lib-anthropic"]
-diffusion-rs = ["inference-lib-diffusion-rs"]
+llama_cpp = ["warpcore-llama-cpp"] # Enable dependency in root pkg
+openai = ["warpcore-openai"]    # Enable the optional backend dependency in the root package.
+anthropic = ["warpcore-anthropic"]
+diffusion-rs = ["warpcore-diffusion-rs"]
 candle = []    # Future
 all = ["llama_cpp", "openai", "anthropic", "diffusion-rs"]
 
-# Root package definition (inference-lib)
+# Root package definition (warpcore)
 [package]
-name = "inference-lib"
+name = "warpcore"
 version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-inference-lib-core = { path = "crates/core", version = "0.1.0" }
-inference-lib-llama-cpp = { path = "crates/backends/llama_cpp", version = "0.1.0", optional = true }
-inference-lib-openai = { path = "crates/backends/openai", version = "0.1.0", optional = true }
-inference-lib-anthropic = { path = "crates/backends/anthropic", version = "0.1.0", optional = true }
-inference-lib-diffusion-rs = { path = "crates/backends/diffusion-rs", version = "0.1.0", optional = true }
+warpcore-core = { path = "crates/core", version = "0.1.0" }
+warpcore-llama-cpp = { path = "crates/backends/llama_cpp", version = "0.1.0", optional = true }
+warpcore-openai = { path = "crates/backends/openai", version = "0.1.0", optional = true }
+warpcore-anthropic = { path = "crates/backends/anthropic", version = "0.1.0", optional = true }
+warpcore-diffusion-rs = { path = "crates/backends/diffusion-rs", version = "0.1.0", optional = true }
 
 tokio = { workspace = true }
 anyhow = { workspace = true } 
