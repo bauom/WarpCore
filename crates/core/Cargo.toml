@@ -1,0 +1,30 @@
+[package]
+name = "inference-lib-core"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+anyhow = { workspace = true }
+tokio = { workspace = true }
+async-trait = { workspace = true }
+thiserror = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+tracing = { workspace = true }
+dotenvy = { workspace = true }
+reqwest = { workspace = true }
+
+# Required for streaming API
+tokio-stream = { workspace = true }
+futures = { workspace = true }
+pin-project-lite = { workspace = true }
+
+# Required for error conversion
+derive_builder = "0.20.2" # Use version consistent with async-openai if possible, check its Cargo.lock 
+async-openai = { workspace = true, optional = true } # Add optional dependency
+anthropic = { workspace = true, optional = true } # Add optional dependency
+
+[features]
+default = []
+openai_error_conversion = ["dep:async-openai"] # Feature to enable the conversion
+anthropic_error_conversion = ["dep:anthropic"] # Feature to enable the conversion 

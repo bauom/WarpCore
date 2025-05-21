@@ -1,0 +1,25 @@
+[package]
+name = "inference-lib-openai"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+inference-lib-core = { path = "../../core", features = ["openai_error_conversion"] }
+
+# Add OpenAI client crate here
+# Inherit version/source from workspace, but specify required features here
+async-openai = { workspace = true, features = ["rustls"] }
+
+reqwest = { workspace = true }
+serde_json = { workspace = true }
+tokio = { workspace = true }
+async-trait = { workspace = true }
+tracing = { workspace = true }
+anyhow = { workspace = true }
+serde = { workspace = true }
+dotenvy = { workspace = true }
+futures = { workspace = true }
+tokio-stream = { workspace = true }
+pin-project-lite = { workspace = true }
+bytes = "1"
+async-stream = "0.3" 

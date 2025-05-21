@@ -1,0 +1,30 @@
+[package]
+name = "inference-lib-examples"
+version = "0.1.0"
+edition = "2021"
+
+publish = false # Prevent publishing examples crate
+
+[dependencies]
+inference-lib = { path = "../../", features = ["all"] } # Depend on the root library
+inference-lib-openai = { path = "../backends/openai", version = "0.1.0", optional = true }
+inference-lib-anthropic = { path = "../backends/anthropic", version = "0.1.0", optional = true }
+inference-lib-llama-cpp = { path = "../backends/llama_cpp", version = "0.1.0", optional = true } # Add llama_cpp backend
+inference-lib-diffusion-rs = { path = "../backends/diffusion-rs", version = "0.1.0", optional = true } # <-- NEW
+
+tokio = { version = "1", features = ["macros", "rt-multi-thread"] }
+tokio-stream = "0.1"
+anyhow = "1.0"
+dotenv = "0.15"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter", "fmt"] }
+futures = "0.3"
+
+[features]
+# These features just re-expose the features from the main inference-lib
+default = []
+openai = ["inference-lib-openai", "inference-lib/openai"]
+anthropic = ["inference-lib-anthropic", "inference-lib/anthropic"]
+llama_cpp = ["inference-lib-llama-cpp", "inference-lib/llama_cpp"] # Define llama_cpp feature
+diffusion-rs = ["inference-lib-diffusion-rs", "inference-lib/diffusion-rs"] # <-- NEW
+all = ["openai", "anthropic", "llama_cpp", "diffusion-rs"] # <-- MODIFIED

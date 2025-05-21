@@ -1,0 +1,19 @@
+[package]
+name = "inference-lib-llama-cpp"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+inference-lib-core = { path = "../../core", version = "0.1.0" }
+llama-cpp-2 = { version = "0.1.92", features = ["metal"] }
+once_cell = { version = "1.19" }
+tracing = { version = "0.1" }
+anyhow = { version = "1.0" }
+thiserror = { version = "1.0" }
+async-trait = { version = "0.1" }
+futures = { version = "0.3" }
+async-stream = { version = "0.3" }
+num_cpus = { version = "1.16" }
+
+[features]
+default = [] 
