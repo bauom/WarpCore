@@ -11,6 +11,7 @@ warpcore-openai = { path = "../backends/openai", version = "0.1.0", optional = t
 warpcore-anthropic = { path = "../backends/anthropic", version = "0.1.0", optional = true }
 warpcore-llama-cpp = { path = "../backends/llama_cpp", version = "0.1.0", optional = true } # Add llama_cpp backend
 warpcore-diffusion-rs = { path = "../backends/diffusion-rs", version = "0.1.0", optional = true } # <-- NEW
+warpcore-hive = { path = "../backends/hive", version = "0.1.0", optional = true }
 
 tokio = { version = "1", features = ["macros", "rt-multi-thread"] }
 tokio-stream = "0.1"
@@ -27,4 +28,5 @@ openai = ["warpcore-openai", "warpcore/openai"]
 anthropic = ["warpcore-anthropic", "warpcore/anthropic"]
 llama_cpp = ["warpcore-llama-cpp", "warpcore/llama_cpp"] # Define llama_cpp feature
 diffusion-rs = ["warpcore-diffusion-rs", "warpcore/diffusion-rs"] # <-- NEW
+hive = ["warpcore-hive", "warpcore/hive"]
 all = ["openai", "anthropic", "llama_cpp", "diffusion-rs"] # <-- MODIFIED

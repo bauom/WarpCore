@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
-use std::time::Duration;
 use std::path::PathBuf;
+use std::time::Duration;
 
 /// Specifies the type of inference backend to use.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
@@ -10,9 +10,9 @@ pub enum BackendType {
     OpenAI,
     Anthropic,
     DiffusionRs,
-    // Candle, // Planned
-    // Groq, // Planned
-    // Modal, // Planned
+    Hive, // Candle, // Planned
+          // Groq, // Planned
+          // Modal, // Planned
 }
 
 /// Specifies the type of model.
@@ -174,11 +174,11 @@ impl GenerationOptions {
         self.temperature = Some(temp);
         self
     }
-     pub fn with_top_p(mut self, p: f32) -> Self {
+    pub fn with_top_p(mut self, p: f32) -> Self {
         self.top_p = Some(p);
         self
     }
-     pub fn with_top_k(mut self, k: usize) -> Self {
+    pub fn with_top_k(mut self, k: usize) -> Self {
         self.top_k = Some(k);
         self
     }
@@ -262,20 +262,20 @@ impl DiffusionOptions {
 /// This should mirror options available in the `diffusion-rs` crate.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub enum SamplerKind {
-    EulerA,         // EULER_A
-    Euler,          // EULER
-    Heun,           // HEUN
-    Dpm2,           // DPM2
-    Dpmpp2sA,       // DPMPP2S_A
-    Dpmpp2m,        // DPMPP2M
-    Dpmpp2mv2,      // DPMPP2Mv2 - NEW
-    Ipndm,          // IPNDM - NEW (was Pndm)
-    IpndmV,         // IPNDM_V - NEW
-    Lcm,            // LCM - NEW
-    DdimTrailing,   // DDIM_TRAILING - NEW (was Ddim)
-    Tcd,            // TCD - NEW
-    // LMS and UniPc seem to be missing from diffusion-rs 0.1.9 sample_method_t
-    // Add others as supported by diffusion-rs
+    EulerA,       // EULER_A
+    Euler,        // EULER
+    Heun,         // HEUN
+    Dpm2,         // DPM2
+    Dpmpp2sA,     // DPMPP2S_A
+    Dpmpp2m,      // DPMPP2M
+    Dpmpp2mv2,    // DPMPP2Mv2 - NEW
+    Ipndm,        // IPNDM - NEW (was Pndm)
+    IpndmV,       // IPNDM_V - NEW
+    Lcm,          // LCM - NEW
+    DdimTrailing, // DDIM_TRAILING - NEW (was Ddim)
+    Tcd,          // TCD - NEW
+                  // LMS and UniPc seem to be missing from diffusion-rs 0.1.9 sample_method_t
+                  // Add others as supported by diffusion-rs
 }
 
 /// Specifies the desired output format for generated images.
@@ -284,4 +284,4 @@ pub enum ImageOutputFormat {
     Png,
     Jpg,
     // Add other formats if needed
-} 
+}

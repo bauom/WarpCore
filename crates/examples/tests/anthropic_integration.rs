@@ -2,14 +2,14 @@
 mod anthropic_tests {
     use anyhow::Result;
     use futures::StreamExt;
-    use warpcore::{create_inference_service, BackendType, GenerationOptions, ModelType};
     use std::env;
+    use warpcore::{create_inference_service, BackendType, GenerationOptions, ModelType};
 
     // Helper function to setup tracing and dotenv only once
     fn setup() {
         // Ignore errors if already initialized
         let _ = tracing_subscriber::fmt::try_init();
-        dotenvy::dotenv().ok();
+        dotenv::dotenv().ok();
     }
 
     #[tokio::test]
@@ -17,7 +17,7 @@ mod anthropic_tests {
     async fn test_anthropic_list_models() -> anyhow::Result<()> {
         setup();
         println!("--- Creating Anthropic Service ---");
-        let service = create_inference_service(BackendType::Anthropic, None).await?;
+        let service = create_inference_service(BackendType::Anthropic, None, None).await?;
 
         println!("--- Listing Available Models ---");
         match service.list_available_models().await {
@@ -37,18 +37,16 @@ mod anthropic_tests {
     #[ignore = "Requires ANTHROPIC_API_KEY and network access"]
     async fn test_anthropic_generation_non_streaming() -> anyhow::Result<()> {
         setup();
-        let service = create_inference_service(BackendType::Anthropic, None).await?;
-        
+        let service = create_inference_service(BackendType::Anthropic, None, None).await?;
+
         // *** IMPORTANT: Replace with a valid model ID for your account ***
-        let model_id = "claude-3-haiku-20240307"; 
+        let model_id = "claude-3-haiku-20240307";
 
         println!("\n--- Loading Model: {} ---", model_id);
         let model = service
             .load_model(model_id, ModelType::TextToText, None)
             .await?;
-        let text_model = model
-            .as_text_to_text()
-            .expect("Model should be TextToText");
+        let text_model = model.as_text_to_text().expect("Model should be TextToText");
 
         let prompt = "Write a short, funny story about a conversation between a Rust crab and a Python snake.";
         let options = GenerationOptions::new()
@@ -60,7 +58,7 @@ mod anthropic_tests {
         match text_model.generate(prompt, Some(options.clone())).await {
             Ok(response) => {
                 println!("\nResponse:\n{}", response);
-                 assert!(!response.is_empty(), "Response should not be empty");
+                assert!(!response.is_empty(), "Response should not be empty");
             }
             Err(e) => {
                 eprintln!("Generation failed: {}", e);
@@ -74,17 +72,15 @@ mod anthropic_tests {
     #[ignore = "Requires ANTHROPIC_API_KEY and network access"]
     async fn test_anthropic_generation_streaming() -> anyhow::Result<()> {
         setup();
-        let service = create_inference_service(BackendType::Anthropic, None).await?;
+        let service = create_inference_service(BackendType::Anthropic, None, None).await?;
 
         // *** IMPORTANT: Replace with a valid model ID for your account ***
-        let model_id = "claude-3-haiku-20240307"; 
+        let model_id = "claude-3-haiku-20240307";
 
         let model = service
             .load_model(model_id, ModelType::TextToText, None)
             .await?;
-        let text_model = model
-            .as_text_to_text()
-            .expect("Model should be TextToText");
+        let text_model = model.as_text_to_text().expect("Model should be TextToText");
 
         let prompt = "Write a short, funny story about a conversation between a Rust crab and a Python snake.";
         let options = GenerationOptions::new()
@@ -109,7 +105,7 @@ mod anthropic_tests {
                 Err(e) => {
                     eprintln!("\nStream error: {}", e);
                     had_error = true;
-                    break; 
+                    break;
                 }
             }
         }
@@ -118,9 +114,11 @@ mod anthropic_tests {
         if had_error {
             panic!("Streaming generation failed.");
         } else {
-            assert!(!full_response.is_empty(), "Streamed response should not be empty");
+            assert!(
+                !full_response.is_empty(),
+                "Streamed response should not be empty"
+            );
         }
         Ok(())
     }
-
-} 
+}

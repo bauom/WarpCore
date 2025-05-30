@@ -1,10 +1,11 @@
 #[cfg(feature = "diffusion-rs")]
 mod diffusion_rs_tests {
     use anyhow::Result;
+    use std::env;
     use warpcore::{
-        create_inference_service, BackendType, DiffusionOptions, ImageOutput, ModelType, SamplerKind,
-    };
-    use std::env; // For env::var for model path, and temp_dir
+        create_inference_service, BackendType, DiffusionOptions, ImageOutput, ModelType,
+        SamplerKind,
+    }; // For env::var for model path, and temp_dir
 
     // Helper function to setup tracing and dotenv only once
     fn setup() {
@@ -23,7 +24,7 @@ mod diffusion_rs_tests {
         println!("--- Testing DiffusionRs Preset Generation ---");
 
         let backend_type = BackendType::DiffusionRs;
-        let service = create_inference_service(backend_type, None).await?;
+        let service = create_inference_service(backend_type, None, None).await?;
 
         let model_id = "SDXLTurbo1_0Fp16"; // Ensure this preset is valid for diffusion-rs v0.1.9
         println!("Loading model from preset: {}", model_id);
@@ -44,7 +45,7 @@ mod diffusion_rs_tests {
         let options = DiffusionOptions::new()
             .with_width(512) // Smaller for faster test
             .with_height(512)
-            .with_steps(8)   // Fewer steps for Turbo
+            .with_steps(8) // Fewer steps for Turbo
             .with_cfg_scale(1.2)
             .with_negative_prompt(negative_prompt.to_string())
             .with_sampler(SamplerKind::EulerA) // Make sure EulerA is mapped and valid
@@ -54,13 +55,20 @@ mod diffusion_rs_tests {
         println!("Generating image with prompt: '{}'", prompt);
         println!("Output will be saved to: {}", output_file.display());
 
-        match text_to_image_model.generate_image(prompt, Some(options)).await {
+        match text_to_image_model
+            .generate_image(prompt, Some(options))
+            .await
+        {
             Ok(ImageOutput::File(path)) => {
                 println!("Image generation successful! Output at: {}", path.display());
                 assert!(path.exists(), "Output file should exist");
             }
             Ok(ImageOutput::Bytes(bytes, format)) => {
-                println!("Image generation successful! Received {} bytes in format {:?}.", bytes.len(), format);
+                println!(
+                    "Image generation successful! Received {} bytes in format {:?}.",
+                    bytes.len(),
+                    format
+                );
                 assert!(!bytes.is_empty(), "Byte output should not be empty");
                 // Optionally save for inspection during test development
                 // std::fs::write(&output_file, bytes)?;
@@ -82,7 +90,7 @@ mod diffusion_rs_tests {
         println!("--- Testing DiffusionRs Local Model Generation ---");
 
         // !!! IMPORTANT: Replace with the actual, absolute path to your model file !!!
-        let model_file_path_str = "YOUR_HARDCODED_MODEL_PATH_HERE.safetensors";    
+        let model_file_path_str = "YOUR_HARDCODED_MODEL_PATH_HERE.safetensors";
 
         if model_file_path_str == "YOUR_HARDCODED_MODEL_PATH_HERE.safetensors" {
             println!(
@@ -90,21 +98,27 @@ mod diffusion_rs_tests {
             );
             return Ok(());
         }
-        
-        println!("Attempting to load local model from hardcoded path: {}", model_file_path_str);
+
+        println!(
+            "Attempting to load local model from hardcoded path: {}",
+            model_file_path_str
+        );
         // Note: If this is not an absolute path, it will be resolved relative to where the test is run from,
         // or the inference-lib backend might try to resolve it against MODELS_PATH/DIFFUSION_MODELS_PATH.
         // For testing, an absolute path is usually most reliable if not using the env var method.
 
         let backend_type = BackendType::DiffusionRs;
-        let service = create_inference_service(backend_type, None).await?;
+        let service = create_inference_service(backend_type, None, None).await?;
 
         let model = service
             .load_model(&model_file_path_str, ModelType::TextToImage, None)
             .await?;
 
         let text_to_image_model = model.as_text_to_image().ok_or_else(|| {
-            anyhow::anyhow!("Failed to get TextToImageModel for local model {}", model_file_path_str)
+            anyhow::anyhow!(
+                "Failed to get TextToImageModel for local model {}",
+                model_file_path_str
+            )
         })?;
 
         let prompt = "A serene forest path at dawn, shafts of light through trees";
@@ -122,13 +136,23 @@ mod diffusion_rs_tests {
         println!("Generating image with local model, prompt: '{}'", prompt);
         println!("Output will be saved to: {}", output_file.display());
 
-        match text_to_image_model.generate_image(prompt, Some(options)).await {
+        match text_to_image_model
+            .generate_image(prompt, Some(options))
+            .await
+        {
             Ok(ImageOutput::File(path)) => {
-                println!("Local model image generation successful! Output at: {}", path.display());
+                println!(
+                    "Local model image generation successful! Output at: {}",
+                    path.display()
+                );
                 assert!(path.exists(), "Output file should exist");
             }
             Ok(ImageOutput::Bytes(bytes, format)) => {
-                println!("Local model image generation successful! Received {} bytes in format {:?}.", bytes.len(), format);
+                println!(
+                    "Local model image generation successful! Received {} bytes in format {:?}.",
+                    bytes.len(),
+                    format
+                );
                 assert!(!bytes.is_empty(), "Byte output should not be empty");
             }
             Err(e) => {
@@ -139,4 +163,4 @@ mod diffusion_rs_tests {
         println!("--- Local model generation test finished. ---");
         Ok(())
     }
-} 
+}

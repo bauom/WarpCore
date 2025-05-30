@@ -14,6 +14,12 @@ pub use warpcore_anthropic;
 #[cfg(feature = "diffusion-rs")]
 pub use warpcore_diffusion_rs;
 
+use warpcore_core::{
+    BackendConfig, BackendType, GenerationOptions, InferenceError, InferenceService, ModelType,
+};
+#[cfg(feature = "hive")]
+pub use warpcore_hive;
+
 // --- Top-level helper functions ---
 
 use std::sync::Arc;
@@ -23,6 +29,7 @@ use std::sync::Arc;
 pub async fn create_inference_service(
     backend_type: BackendType,
     config: Option<BackendConfig>,
+    cluster_id: Option<String>,
 ) -> Result<Arc<dyn InferenceService>> {
     match backend_type {
         #[cfg(feature = "openai")]
@@ -46,6 +53,11 @@ pub async fn create_inference_service(
             let service = warpcore_diffusion_rs::DiffusionRsService::new(config)?;
             Ok(Arc::new(service))
         }
+        // #[cfg(feature = "hive")]
+        BackendType::Hive => {
+            let service = warpcore_hive::HiveApiService::new(config, cluster_id.clone())?;
+            Ok(Arc::new(service))
+        }
         _ => Err(InferenceError::BackendUnavailable(backend_type)),
     }
 }
@@ -57,21 +69,19 @@ pub async fn generate_text(
     model_id_or_path: &str,
     prompt: &str,
     max_tokens: u32, // Simplified options for this helper
+    cluster_id: Option<String>,
     // Consider adding Option<BackendConfig> here too
 ) -> Result<String> {
-    let service = create_inference_service(backend_type, None).await?;
+    let service = create_inference_service(backend_type, None, cluster_id).await?;
     let model = service
         .load_model(model_id_or_path, ModelType::TextToText, None)
         .await?;
 
-    let text_model = model
-        .as_text_to_text()
-        .ok_or_else(|| InferenceError::UnsupportedFeature(
-            backend_type,
-            "TextToText model type".to_string()
-        ))?;
+    let text_model = model.as_text_to_text().ok_or_else(|| {
+        InferenceError::UnsupportedFeature(backend_type, "TextToText model type".to_string())
+    })?;
 
     let options = GenerationOptions::new().with_max_tokens(max_tokens);
 
     text_model.generate(prompt, Some(options)).await
-} 
+}

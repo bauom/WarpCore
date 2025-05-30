@@ -1,6 +1,9 @@
 use async_openai::config::OpenAIConfig;
-use async_openai::types::{ChatCompletionRequestMessage, ChatCompletionRequestUserMessageArgs, CreateChatCompletionRequestArgs};
-use async_openai::{Client as OpenAIClient};
+use async_openai::types::{
+    ChatCompletionRequestMessage, ChatCompletionRequestUserMessageArgs,
+    CreateChatCompletionRequestArgs,
+};
+use async_openai::Client as OpenAIClient;
 use warpcore_core::config::GenerationOptions;
 use warpcore_core::error::{InferenceError, Result};
 use warpcore_core::traits::{InferenceService, Model, TextToTextModel};
@@ -76,13 +79,12 @@ impl OpenAIService {
             http_client_builder = http_client_builder.timeout(timeout);
         }
         // Consider adding other reqwest settings like user-agent here
-        let http_client = http_client_builder
-            .build()
-            .map_err(|e| InferenceError::InvalidConfig(format!("Failed to build HTTP client: {}", e)))?;
+        let http_client = http_client_builder.build().map_err(|e| {
+            InferenceError::InvalidConfig(format!("Failed to build HTTP client: {}", e))
+        })?;
 
         // Pass custom client to OpenAIClient
-        let client = OpenAIClient::with_config(openai_config)
-            .with_http_client(http_client);
+        let client = OpenAIClient::with_config(openai_config).with_http_client(http_client);
 
         Ok(Self {
             client,
@@ -162,26 +164,18 @@ impl Model for OpenAIModel {
 #[async_trait]
 impl TextToTextModel for OpenAIModel {
     #[instrument(skip(self, prompt, options))]
-    async fn generate(
-        &self,
-        prompt: &str,
-        options: Option<GenerationOptions>,
-    ) -> Result<String> {
+    async fn generate(&self, prompt: &str, options: Option<GenerationOptions>) -> Result<String> {
         let opts = options.unwrap_or_default();
 
         // Basic prompt templating (user role)
-        let messages = vec![
-            ChatCompletionRequestUserMessageArgs::default()
-                .content(prompt)
-                .build()
-                .map_err(|e| InferenceError::InvalidConfig(format!("Failed to build prompt: {}", e)))?
-                .into()
-        ];
+        let messages = vec![ChatCompletionRequestUserMessageArgs::default()
+            .content(prompt)
+            .build()
+            .map_err(|e| InferenceError::InvalidConfig(format!("Failed to build prompt: {}", e)))?
+            .into()];
 
         let mut request_builder = CreateChatCompletionRequestArgs::default();
-        request_builder
-            .model(&self.model_id)
-            .messages(messages);
+        request_builder.model(&self.model_id).messages(messages);
 
         // Map GenerationOptions to OpenAI request parameters
         if let Some(max_tokens_u32) = opts.max_tokens {
@@ -205,22 +199,20 @@ impl TextToTextModel for OpenAIModel {
         }
         // Add other mappings as needed (presence_penalty, frequency_penalty, etc.)
 
-        let request = request_builder
-            .build()
-            .map_err(|e| InferenceError::InvalidConfig(format!("Failed to build request: {}", e)))?;
+        let request = request_builder.build().map_err(|e| {
+            InferenceError::InvalidConfig(format!("Failed to build request: {}", e))
+        })?;
 
-        let response = self
-            .client
-            .chat()
-            .create(request)
-            .await?;
+        let response = self.client.chat().create(request).await?;
 
         // Extract the first choice's message content
         response
             .choices
             .get(0)
             .and_then(|choice| choice.message.content.clone())
-            .ok_or_else(|| InferenceError::GenerationError("No content received from OpenAI".to_string()))
+            .ok_or_else(|| {
+                InferenceError::GenerationError("No content received from OpenAI".to_string())
+            })
     }
 
     #[instrument(skip(self, prompt, options))]
@@ -301,4 +293,4 @@ impl TextToTextModel for OpenAIModel {
 
         Box::pin(stream)
     }
-} 
+}

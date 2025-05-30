@@ -42,8 +42,9 @@ llama_cpp = ["warpcore-llama-cpp"] # Enable dependency in root pkg
 openai = ["warpcore-openai"]    # Enable the optional backend dependency in the root package.
 anthropic = ["warpcore-anthropic"]
 diffusion-rs = ["warpcore-diffusion-rs"]
+hive = ["warpcore-hive"]
 candle = []    # Future
-all = ["llama_cpp", "openai", "anthropic", "diffusion-rs"]
+all = ["llama_cpp", "openai", "anthropic", "diffusion-rs", "warpcore-hive"] # Enable all optional dependencies in the root package.
 
 # Root package definition (warpcore)
 [package]
@@ -57,6 +58,7 @@ warpcore-llama-cpp = { path = "crates/backends/llama_cpp", version = "0.1.0", op
 warpcore-openai = { path = "crates/backends/openai", version = "0.1.0", optional = true }
 warpcore-anthropic = { path = "crates/backends/anthropic", version = "0.1.0", optional = true }
 warpcore-diffusion-rs = { path = "crates/backends/diffusion-rs", version = "0.1.0", optional = true }
+warpcore-hive = { path = "crates/backends/hive", version = "0.1.0", optional = true }
 
 tokio = { workspace = true }
 anyhow = { workspace = true } 

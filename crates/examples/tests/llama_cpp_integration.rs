@@ -2,16 +2,18 @@
 mod llama_cpp_tests {
     use anyhow::Result;
     use futures::StreamExt;
-    use warpcore::{
-        create_inference_service, BackendType, GenerationOptions, LocalBackendConfig, ModelType, LlamaCppSpecificConfig,
-    };
     use std::env;
     use std::io::Write; // For flushing stdout
     use std::path::Path;
     use tracing::info;
+    use warpcore::{
+        create_inference_service, BackendType, GenerationOptions, LlamaCppSpecificConfig,
+        LocalBackendConfig, ModelType,
+    };
 
     // Define the default model ID used for testing
-    const TEST_MODEL_ID: &str = "hf:bartowski/Qwen2-0.5B-Instruct-GGUF:Qwen2-0.5B-Instruct-Q8_0.gguf";
+    const TEST_MODEL_ID: &str =
+        "hf:bartowski/Qwen2-0.5B-Instruct-GGUF:Qwen2-0.5B-Instruct-Q8_0.gguf";
 
     // Helper function to resolve model path from environment
     fn resolve_model_path(model_id: &str) -> Option<String> {
@@ -45,37 +47,39 @@ mod llama_cpp_tests {
     // Helper to initialize tracing (optional)
     fn setup_tracing() {
         dotenv::dotenv().ok(); // Load .env file if present
-        // Use try_init to avoid panic if already initialized
-        let _ = tracing_subscriber::fmt::try_init(); 
+                               // Use try_init to avoid panic if already initialized
+        let _ = tracing_subscriber::fmt::try_init();
     }
 
     #[tokio::test]
-    #[ignore] // Ignored by default, requires --features llama_cpp and env var
+    // #[ignore] // Ignored by default, requires --features llama_cpp and env var
     async fn test_llama_cpp_service_creation() -> Result<()> {
         setup_tracing();
         info!("Testing Llama.cpp service creation...");
 
         // Fix: Pass LlamaCppSpecificConfig directly, and String directly to with_numa_strategy
-        let llama_config = LlamaCppSpecificConfig::default()
-            .with_numa_strategy("DISABLED".to_string()); // Pass String directly
-        let backend_config = LocalBackendConfig::default()
-            .with_llama_cpp_config(llama_config); // Pass LlamaCppSpecificConfig directly
+        let llama_config =
+            LlamaCppSpecificConfig::default().with_numa_strategy("DISABLED".to_string()); // Pass String directly
+        let backend_config = LocalBackendConfig::default().with_llama_cpp_config(llama_config); // Pass LlamaCppSpecificConfig directly
 
         let service = create_inference_service(
             BackendType::LlamaCpp,
             Some(warpcore::BackendConfig::Local(backend_config)),
+            None,
         )
         .await?;
 
         assert_eq!(service.backend_type(), BackendType::LlamaCpp);
-        assert!(service.supported_model_types().contains(&ModelType::TextToText));
+        assert!(service
+            .supported_model_types()
+            .contains(&ModelType::TextToText));
 
         info!("Llama.cpp service created successfully.");
         Ok(())
     }
 
     #[tokio::test]
-    #[ignore] // Ignored by default, requires --features llama_cpp and env var
+    // #[ignore] // Ignored by default, requires --features llama_cpp and env var
     async fn test_llama_cpp_model_loading() -> Result<()> {
         setup_tracing();
         // Check if model exists first, but don't pass the path to load_model
@@ -85,7 +89,7 @@ mod llama_cpp_tests {
         };
         info!(model_id=%TEST_MODEL_ID, path=%model_path_resolved, "Checking Llama.cpp model loading with ID...");
 
-        let service = create_inference_service(BackendType::LlamaCpp, None).await?;
+        let service = create_inference_service(BackendType::LlamaCpp, None, None).await?;
         // Load using the Model ID
         let model = service
             .load_model(TEST_MODEL_ID, ModelType::TextToText, None)
@@ -100,7 +104,7 @@ mod llama_cpp_tests {
     }
 
     #[tokio::test]
-    #[ignore] // Ignored by default, requires --features llama_cpp and env var
+    // #[ignore] // Ignored by default, requires --features llama_cpp and env var
     async fn test_llama_cpp_generate() -> Result<()> {
         setup_tracing();
         // Check if model exists first
@@ -110,7 +114,7 @@ mod llama_cpp_tests {
         };
         info!(model_id=%TEST_MODEL_ID, path=%model_path_resolved, "Checking Llama.cpp generate with ID...");
 
-        let service = create_inference_service(BackendType::LlamaCpp, None).await?;
+        let service = create_inference_service(BackendType::LlamaCpp, None, None).await?;
         // Load using the Model ID
         let model = service
             .load_model(TEST_MODEL_ID, ModelType::TextToText, None)
@@ -124,13 +128,16 @@ mod llama_cpp_tests {
         let response = text_model.generate(prompt, Some(options)).await?;
 
         info!(prompt = prompt, response = response, "Generation complete.");
-        assert!(!response.is_empty(), "Generated response should not be empty");
+        assert!(
+            !response.is_empty(),
+            "Generated response should not be empty"
+        );
 
         Ok(())
     }
 
     #[tokio::test]
-    #[ignore] // Ignored by default, requires --features llama_cpp and env var
+    // #[ignore] // Ignored by default, requires --features llama_cpp and env var
     async fn test_llama_cpp_generate_stream() -> Result<()> {
         setup_tracing();
         // Check if model exists first
@@ -140,8 +147,8 @@ mod llama_cpp_tests {
         };
         info!(model_id=%TEST_MODEL_ID, path=%model_path_resolved, "Checking Llama.cpp generate_stream with ID...");
 
-        let service = create_inference_service(BackendType::LlamaCpp, None).await?;
-         // Load using the Model ID
+        let service = create_inference_service(BackendType::LlamaCpp, None, None).await?;
+        // Load using the Model ID
         let model = service
             .load_model(TEST_MODEL_ID, ModelType::TextToText, None)
             .await?;
@@ -173,34 +180,47 @@ mod llama_cpp_tests {
         }
         println!(); // Newline after stream
 
-        info!(prompt = prompt, response = response_text, tokens = token_count, "Streaming complete.");
+        info!(
+            prompt = prompt,
+            response = response_text,
+            tokens = token_count,
+            "Streaming complete."
+        );
         assert!(token_count > 0, "Should receive at least one token");
-        assert!(!response_text.is_empty(), "Streamed response should not be empty");
+        assert!(
+            !response_text.is_empty(),
+            "Streamed response should not be empty"
+        );
 
         Ok(())
     }
 
     #[tokio::test]
-    #[ignore] // Ignored by default, requires --features llama_cpp and env var
+    // #[ignore] // Ignored by default, requires --features llama_cpp and env var
     async fn test_llama_cpp_list_models() -> Result<()> {
         setup_tracing();
         info!("Testing Llama.cpp list_available_models...");
         // This test requires MODELS_PATH to be set and contain the TEST_MODEL_ID path
         let expected_model_id = TEST_MODEL_ID;
         match resolve_model_path(expected_model_id) {
-            Some(_) => info!(id = %expected_model_id, "Test model path resolved successfully. Proceeding with list test."),
+            Some(_) => {
+                info!(id = %expected_model_id, "Test model path resolved successfully. Proceeding with list test.")
+            }
             None => {
                 info!("Test model path could not be resolved. Skipping list models test.");
-                return Ok(()) // Skip test if model path isn't set up correctly
+                return Ok(()); // Skip test if model path isn't set up correctly
             }
         }
-        let service = create_inference_service(BackendType::LlamaCpp, None).await?;
+        let service = create_inference_service(BackendType::LlamaCpp, None, None).await?;
         let models = service.list_available_models().await?;
 
         info!(models = ?models, "Listed models.");
 
-        assert!(!models.is_empty(), "Model list should not be empty when MODELS_PATH is set and contains models.");
-        
+        assert!(
+            !models.is_empty(),
+            "Model list should not be empty when MODELS_PATH is set and contains models."
+        );
+
         // Check if the original TEST_MODEL_ID is present in the results
         let expected_model_id = TEST_MODEL_ID;
         assert!(
@@ -213,4 +233,4 @@ mod llama_cpp_tests {
         info!("Llama.cpp list models test passed.");
         Ok(())
     }
-} 
+}
