@@ -13,7 +13,7 @@ mod hive_tests {
     }
 
     #[tokio::test]
-    #[ignore = ""]
+    // #[ignore = ""]
     async fn test_hive_list_models() -> Result<()> {
         setup();
         println!("--- Creating Hive Service ---");
@@ -35,12 +35,12 @@ mod hive_tests {
     }
 
     #[tokio::test]
-    // #[ignore = "Requires NECTAR_TOKEN and running Hive API instance"]
+    #[ignore = "Requires NECTAR_TOKEN and running Hive API instance"]
     async fn test_hive_generation_non_streaming() -> Result<()> {
         setup();
         let service = create_inference_service(BackendType::Hive, None, None).await?;
 
-        let model_id = "web:phi-1_5-q4f16_1-MLC";
+        let model_id = "web:Llama-3.2-1B-Instruct-q4f16_1-MLC";
         let model = service
             .load_model(model_id, ModelType::TextToText, None)
             .await?;

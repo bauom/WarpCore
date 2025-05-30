@@ -15,7 +15,7 @@ use std::time::Duration;
 use tokio_stream::{self as stream, Stream};
 use tracing::instrument;
 
-const HIVE_URL: &str = "http://localhost:3000";
+// const HIVE_URL: &str = "https://api.dev.hive.internal.aios.network/";
 
 #[derive(Clone)]
 pub struct HiveApiService {

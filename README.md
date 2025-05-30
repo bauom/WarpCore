@@ -12,7 +12,7 @@ Rust developers shouldn't rewrite glue-code every time they swap models or provi
 
 ```rust
 let service = create_inference_service(
-    BackendType::Anthropic, // or BackendType::OpenAI, BackendType::LlamaCpp (planned), ...
+    BackendType::Anthropic, // or BackendType::OpenAI, BackendType::LlamaCpp, BackendType::Hive, ...
     None // Optional backend-specific config (e.g., API keys)
 ).await?;
 
@@ -77,10 +77,11 @@ match text_to_image_model.generate_image("photo of a rusty robot, cinematic ligh
 crates/
 ├─ core/          # Core traits, configs, error types
 ├─ backends/
-│   ├─ llama_cpp/   # (Planned)
-│   ├─ openai/
-│   ├─ anthropic/
-│   └─ diffusion-rs/ # Image generation
+│   ├─ llama_cpp/   # Text-to-text, local GGUF models
+│   ├─ openai/      # Text-to-text, cloud API
+│   ├─ anthropic/   # Text-to-text, cloud API
+│   ├─ hive/        # Text-to-text, cloud API (AIOS Hive network)
+│   └─ diffusion-rs/ # Text-to-image, local models
 └─ examples/      # Integration tests (formerly examples)
     └─ tests/
 ```
@@ -97,6 +98,7 @@ Each backend lives in its own crate so you only compile what you need.
 | `anthropic` (cloud)        | ✅ Available | `anthropic`     | `anthropic-rs`   | Text-to-text                             |
 | `llama-cpp` (local)        | ✅ Available | `llama_cpp`     | `llama-cpp-2`    | Text-to-text, GGUF models                |
 | `diffusion-rs` (local)     | ✅ Available | `diffusion-rs`  | `diffusion-rs`     | Text-to-image, Stable Diffusion models   |
+| `hive` (cloud)             | ✅ Available | `hive`          | `reqwest`          | Text-to-text, requires NECTAR token      |
 | `candle-rs` (local)        | 💤 Planned  | `candle`        |                    |                                          |
 | `groq` / `modal` (cloud)   | 💤 Planned  |                 |                    |                                          |
 
@@ -145,6 +147,12 @@ cargo test --package warpcore-examples --features llama_cpp -- --ignored --test-
 # and a model file (e.g., *.safetensors, *.gguf) at that location.
 # export DIFFUSION_MODELS_PATH=/path/to/your/diffusion/models
 cargo test --package warpcore-examples --features diffusion-rs --test diffusion_rs_integration
+
+# Run Hive tests
+# Requires HIVE_URL and NECTAR_TOKEN environment variables
+# export HIVE_URL=https://api.dev.hive.internal.aios.network/
+# export NECTAR_TOKEN=your-nectar-token
+cargo test --package warpcore-examples --features hive -- --ignored
 
 # Run all available ignored tests (requires all relevant API keys and model paths)
 # Note: Llama.cpp tests require MODELS_PATH and the specific test model.
@@ -197,6 +205,7 @@ The library looks for the following environment variables:
 | Anthropic | `ANTHROPIC_API_KEY`, `ANTHROPIC_API_BASE`, `ANTHROPIC_API_VERSION` |
 | Llama.cpp | `MODELS_PATH` (for resolving relative model paths)           |
 | Diffusion-rs | `DIFFUSION_MODELS_PATH`, `MODELS_PATH` (for resolving relative model paths) |
+| Hive      | `HIVE_URL`, `NECTAR_TOKEN`                                  |
 | *Groq*    | *`GROQ_API_KEY`* (Planned)                                   |
 
 ---
